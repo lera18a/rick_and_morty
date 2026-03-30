@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rick_and_morty/core/di/bloc_injector.dart';
+import 'package:rick_and_morty/core/di/injector.dart';
 import 'package:rick_and_morty/presenter/widgets/list_screen.dart';
 
 class RickAndMortyApp extends StatelessWidget {
@@ -6,6 +8,8 @@ class RickAndMortyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: const ListScreen());
+    return Injector(
+      child: BlocInjector(child: MaterialApp(home: const ListScreen())),
+    );
   }
 }
