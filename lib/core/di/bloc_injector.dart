@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:rick_and_morty/core/di/injector.dart';
+import 'package:rick_and_morty/data/api/character_repository_impl.dart';
 import 'package:rick_and_morty/presenter/cubit/characters/characters_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,7 +13,8 @@ class BlocInjector extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          CharactersCubit(characterRepository: context.read())..getCharacter(),
+          CharactersCubit(characterRepository: getIt<CharacterRepositoryImpl>())
+            ..getCharacter(),
       child: _child,
     );
   }
