@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:rick_and_morty/data/%20implements/rick_and_morty_api_repository.dart';
+import 'package:rick_and_morty/data/api/rick_and_morty_api_repository.dart';
 import 'package:rick_and_morty/data/models/character/character.dart';
 import 'package:rick_and_morty/data/models/full_character/full_character.dart';
 

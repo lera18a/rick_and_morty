@@ -1,4 +1,4 @@
-import 'package:rick_and_morty/data/%20implements/rick_and_morty_api_repository.dart';
+import 'package:rick_and_morty/data/api/rick_and_morty_api_repository.dart';
 import 'package:rick_and_morty/domain/entity/character_data.dart';
 import 'package:rick_and_morty/domain/repository/sqflite_character_repository.dart';
 
