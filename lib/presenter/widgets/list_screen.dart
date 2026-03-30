@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/core/widgets/error_loc.dart';
-import 'package:rick_and_morty/core/widgets/list_cards_widget.dart';
+import 'package:rick_and_morty/core/widgets/list_card.dart';
 import 'package:rick_and_morty/core/widgets/list_widget.dart';
 import 'package:rick_and_morty/core/widgets/loading_widget.dart';
 import 'package:rick_and_morty/domain/entity/character_data.dart';
@@ -22,21 +22,20 @@ class ListScreen extends StatelessWidget {
             CharactersLoading() => const LoadingWidget(),
             CharactersLoaded(:final List<CharacterData> characters) =>
               ListWidget<CharacterData>(
-                itemBuilder: (character) => ListCardsWidget(
-                  lastLocationPlace: character.locationName,
-                  firstLocationPlace: character.originName,
+                itemBuilder: (character) => ListCard(
                   status: character.status,
                   species: character.species,
                   name: character.name,
                   imageURL: character.image,
                   onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DetailsScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => DetailsScreen(character: character),
+                    ),
                   ),
                 ),
                 characters: characters,
               ),
-            CharacterDetailLoaded() => Placeholder(),
             CharactersError() => ErrorLoc(message: state.message),
           };
         },
