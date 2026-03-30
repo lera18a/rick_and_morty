@@ -5,7 +5,7 @@ import 'package:rick_and_morty/core/enviroment_variables.dart';
 import 'package:rick_and_morty/data/api/character_repository_impl.dart';
 import 'package:rick_and_morty/data/%20implements/sqflite_character_repository_impl.dart';
 import 'package:rick_and_morty/data/%20implements/open_sqflite_repository_impl.dart';
-import 'package:rick_and_morty/data/%20implements/rick_and_morty_api_repository.dart';
+import 'package:rick_and_morty/data/api/rick_and_morty_api_repository.dart';
 import 'package:rick_and_morty/data/api/rick_and_morty_api_repository_impl.dart';
 import 'package:rick_and_morty/domain/repository/sqflite_character_repository.dart';
 import 'package:rick_and_morty/domain/repository/open_sqflite_repository.dart';
