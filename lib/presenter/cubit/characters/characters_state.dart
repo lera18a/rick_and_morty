@@ -13,12 +13,6 @@ final class CharactersLoaded extends CharactersState {
   CharactersLoaded({required this.characters});
 }
 
-final class CharacterDetailLoaded extends CharactersState {
-  final CharacterData character;
-
-  CharacterDetailLoaded({required this.character});
-}
-
 final class CharactersError extends CharactersState {
   final String message;
 

@@ -21,16 +21,6 @@ class CharactersCubit extends Cubit<CharactersState> {
     }
   }
 
-  Future<void> getCharacterDetail(int id) async {
-    emit(CharactersLoading());
-    try {
-      final character = await _characterRepository.getCharacterDetail(id);
-      emit(CharacterDetailLoaded(character: character));
-    } catch (e) {
-      emit(CharactersError(message: 'Ошибка: $e'));
-    }
-  }
-
   Future<void> refresh() async {
     await getCharacter();
   }
