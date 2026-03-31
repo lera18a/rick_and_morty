@@ -3,4 +3,6 @@ abstract interface class Repository<T> {
   Future<void> cached(List<T> entities);
   Future<T?> getByID(int entityID);
   Future<void> clearCache();
+  Future<List<T>> getLiked();
+  Future<void> toggleLike(int entityID);
 }
