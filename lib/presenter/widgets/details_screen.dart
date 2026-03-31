@@ -25,14 +25,14 @@ class DetailsScreen extends StatelessWidget {
             return switch (state) {
               CharacterInitial() => LoadingWidget(),
               CharacterLoading() => LoadingWidget(),
-              CharacterLoaded() => DetailCardWidget(
+              CharacterLoaded(:final character) => DetailCardWidget(
                 lastLocationPlace: character.locationName,
                 firstLocationPlace: character.originName,
-                status: character.status,
                 species: character.species,
                 name: character.name,
                 imageURL: character.image,
                 character: character,
+                statusLife: character.status,
               ),
               CharacterError() => ErrorLoc(message: state.message),
             };

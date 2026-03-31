@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rick_and_morty/core/widgets/status_life.dart';
 import 'package:rick_and_morty/core/widgets/status_of_character_widget.dart';
 
 class ListCard extends StatelessWidget {
@@ -6,16 +7,15 @@ class ListCard extends StatelessWidget {
     super.key,
     required this.name,
     required this.imageURL,
-    required this.status,
     required this.species,
     this.onTap,
+    required this.statusOfCharacter,
   });
   final String name;
   final String imageURL;
-  final String status;
   final String species;
   final void Function()? onTap;
-
+  final StatusLife statusOfCharacter;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -47,9 +47,9 @@ class ListCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      StatusOfCharacterWidget.alive(
-                        status: status,
+                      StatusOfCharacterWidget(
                         species: species,
+                        statusLife: statusOfCharacter,
                       ),
                     ],
                   ),

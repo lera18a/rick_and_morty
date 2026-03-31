@@ -2,10 +2,12 @@
 // location - model и origin - модель
 import 'dart:convert';
 
+import 'package:rick_and_morty/core/widgets/status_life.dart';
+
 class CharacterData {
   final int id;
   final String name;
-  final String status;
+  final StatusLife status;
   final String species;
   final String type;
   final String gender;
@@ -42,7 +44,7 @@ class CharacterData {
     return {
       'id': id,
       'name': name,
-      'status': status,
+      'status': status.name,
       'species': species,
       'type': type,
       'gender': gender,
@@ -63,7 +65,7 @@ class CharacterData {
     return CharacterData(
       id: data['id'] as int,
       name: data['name'] as String,
-      status: data['status'] as String,
+      status: StatusLife.fromString(data['status'] as String),
       species: data['species'] as String,
       type: data['type'] as String,
       gender: data['gender'] as String,

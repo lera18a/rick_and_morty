@@ -23,7 +23,6 @@ class ListScreen extends StatelessWidget {
             CharactersLoaded(:final List<CharacterData> characters) =>
               ListWidget<CharacterData>(
                 itemBuilder: (character) => ListCard(
-                  status: character.status,
                   species: character.species,
                   name: character.name,
                   imageURL: character.image,
@@ -33,6 +32,7 @@ class ListScreen extends StatelessWidget {
                       builder: (context) => DetailsScreen(character: character),
                     ),
                   ),
+                  statusOfCharacter: character.status,
                 ),
                 characters: characters,
               ),

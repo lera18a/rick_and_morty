@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rick_and_morty/core/widgets/info_widget.dart';
+import 'package:rick_and_morty/core/widgets/status_life.dart';
 import 'package:rick_and_morty/core/widgets/status_of_character_widget.dart';
 
 class DetailCardWidget<T> extends StatelessWidget {
@@ -7,19 +8,19 @@ class DetailCardWidget<T> extends StatelessWidget {
     super.key,
     required this.lastLocationPlace,
     required this.firstLocationPlace,
-    required this.status,
     required this.species,
     required this.name,
     required this.imageURL,
     required this.character,
+    required this.statusLife,
   });
   final T character;
   final String lastLocationPlace;
   final String firstLocationPlace;
-  final String status;
   final String species;
   final String name;
   final String imageURL;
+  final StatusLife statusLife;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,10 @@ class DetailCardWidget<T> extends StatelessWidget {
                     fontSize: 25,
                   ),
                 ),
-                StatusOfCharacterWidget.alive(status: status, species: species),
+                StatusOfCharacterWidget(
+                  species: species,
+                  statusLife: statusLife,
+                ),
                 InfoWidget.lastLocation(place: firstLocationPlace),
                 InfoWidget.firstLocation(place: lastLocationPlace),
               ],

@@ -1,3 +1,4 @@
+import 'package:rick_and_morty/core/widgets/status_life.dart';
 import 'package:rick_and_morty/data/models/location/location.dart';
 import 'package:rick_and_morty/data/models/origin/origin.dart';
 
@@ -40,7 +41,7 @@ class Character {
     return CharacterData(
       id: id,
       name: name,
-      status: status,
+      status: StatusLife.fromString(status),
       species: species,
       type: type,
       gender: gender,
