@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/core/di/injector.dart';
 import 'package:rick_and_morty/core/widgets/details_card_widget.dart';
 import 'package:rick_and_morty/core/widgets/error_loc.dart';
+import 'package:rick_and_morty/core/widgets/like_status.dart';
 import 'package:rick_and_morty/core/widgets/loading_widget.dart';
 import 'package:rick_and_morty/data/api/character_repository_impl.dart';
 import 'package:rick_and_morty/domain/entity/character_data.dart';
@@ -33,6 +34,8 @@ class DetailsScreen extends StatelessWidget {
                 imageURL: character.image,
                 character: character,
                 statusLife: character.status,
+                likeStatus: LikeStatus.like,
+                onPressedLike: () {},
               ),
               CharacterError() => ErrorLoc(message: state.message),
             };
