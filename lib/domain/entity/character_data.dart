@@ -20,6 +20,7 @@ class CharacterData {
   final String url;
   final String created;
   final int cachedAt;
+  final bool isLiked;
 
   const CharacterData({
     required this.id,
@@ -37,6 +38,7 @@ class CharacterData {
     required this.url,
     required this.created,
     required this.cachedAt,
+    required this.isLiked,
   });
 
   // в базу
@@ -57,6 +59,7 @@ class CharacterData {
       'url': url,
       'created': created,
       'cached_at': cachedAt,
+      'is_liked': isLiked ? 1 : 0,
     };
   }
 
@@ -80,6 +83,27 @@ class CharacterData {
       url: data['url'] as String,
       created: data['created'] as String,
       cachedAt: data['cached_at'] as int,
+      isLiked: (data['is_liked'] as int) == 1,
+    );
+  }
+  CharacterData copyWith({bool? isLiked}) {
+    return CharacterData(
+      id: id,
+      name: name,
+      status: status,
+      isLiked: isLiked ?? this.isLiked,
+      species: species,
+      type: type,
+      gender: gender,
+      locationName: locationName,
+      locationUrl: locationUrl,
+      originName: originName,
+      originUrl: originUrl,
+      image: image,
+      episodes: episodes,
+      url: url,
+      created: created,
+      cachedAt: cachedAt,
     );
   }
 }

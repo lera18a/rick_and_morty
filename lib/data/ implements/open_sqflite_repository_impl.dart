@@ -8,12 +8,9 @@ class OpenSqfliteRepositoryImpl implements OpenSqfliteRepository {
   @override
   Future<Database> openData() async {
     if (_database != null) return _database!;
-
     final databasesPath = await getDatabasesPath();
     String path = join(databasesPath, 'rick_and_morty.db');
-
     _database = await openDatabase(path, version: 1, onCreate: _onCreate);
-
     return _database!;
   }
 
@@ -34,7 +31,8 @@ class OpenSqfliteRepositoryImpl implements OpenSqfliteRepository {
             episodes TEXT NOT NULL,
             url TEXT NOT NULL,
             created TEXT NOT NULL,
-            cached_at INTEGER NOT NULL
+            cached_at INTEGER NOT NULL,
+            is_liked INTEGER NOT NULL DEFAULT 0
             )
            ''');
   }

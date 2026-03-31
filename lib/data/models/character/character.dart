@@ -54,6 +54,7 @@ class Character {
       url: url,
       created: created,
       cachedAt: DateTime.now().millisecondsSinceEpoch,
+      isLiked: false,
     );
   }
 
