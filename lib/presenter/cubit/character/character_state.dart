@@ -8,9 +8,9 @@ final class CharacterInitial extends CharacterState {}
 final class CharacterLoading extends CharacterState {}
 
 final class CharacterLoaded extends CharacterState {
-  final CharacterData character;
+  final DetailEntity detailEntity;
 
-  CharacterLoaded({required this.character});
+  CharacterLoaded({required this.detailEntity});
 }
 
 final class CharacterError extends CharacterState {

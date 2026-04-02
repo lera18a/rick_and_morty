@@ -3,39 +3,37 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/core/di/injector.dart';
 import 'package:rick_and_morty/core/widgets/details_card_widget.dart';
 import 'package:rick_and_morty/core/widgets/error_loc.dart';
-import 'package:rick_and_morty/core/widgets/like_status.dart';
 import 'package:rick_and_morty/core/widgets/loading_widget.dart';
-import 'package:rick_and_morty/data/api/character_repository_impl.dart';
-import 'package:rick_and_morty/domain/entity/character_data.dart';
+import 'package:rick_and_morty/data/repository_impl.dart';
+import 'package:rick_and_morty/domain/entity/detail_entity.dart';
 import 'package:rick_and_morty/presenter/cubit/character/character_cubit.dart';
 
 class DetailsScreen extends StatelessWidget {
-  const DetailsScreen({super.key, required this.character});
+  const DetailsScreen({super.key, required this.detailEntity});
 
-  final CharacterData character;
+  final DetailEntity detailEntity;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('DetailsScreen')),
       body: BlocProvider(
-        create: (context) => CharacterCubit(
-          characterRepository: getIt<CharacterRepositoryImpl>(),
-        )..getCharacterDetail(character.id),
+        create: (context) =>
+            CharacterCubit(characterRepository: getIt<RepositoryImpl>()),
+        // ..getCharacterDetail(detailEntity.id),
         child: BlocBuilder<CharacterCubit, CharacterState>(
           builder: (BuildContext context, state) {
             return switch (state) {
               CharacterInitial() => LoadingWidget(),
               CharacterLoading() => LoadingWidget(),
-              CharacterLoaded(:final character) => DetailCardWidget(
-                lastLocationPlace: character.locationName,
-                firstLocationPlace: character.originName,
-                species: character.species,
-                name: character.name,
-                imageURL: character.image,
-                character: character,
-                statusLife: character.status,
-                likeStatus: LikeStatus.like,
-                onPressedLike: () {},
+              CharacterLoaded(:final detailEntity) => DetailCardWidget(
+                lastLocationPlace: detailEntity.lastLocationPlace,
+                firstLocationPlace: detailEntity.firstLocationPlace,
+                species: detailEntity.species,
+                name: detailEntity.name,
+                imageURL: detailEntity.imageURL,
+                character: detailEntity,
+                statusLife: detailEntity.statusLife,
+                likeStatus: detailEntity.likeStatus,
               ),
               CharacterError() => ErrorLoc(message: state.message),
             };

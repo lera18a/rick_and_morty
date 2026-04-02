@@ -8,9 +8,9 @@ final class CharactersInitial extends CharactersState {}
 final class CharactersLoading extends CharactersState {}
 
 final class CharactersLoaded extends CharactersState {
-  final List<CharacterData> characters;
-
-  CharactersLoaded({required this.characters});
+  final List<ListEntity> listEntities;
+  final bool hasMore;
+  CharactersLoaded({required this.listEntities, required this.hasMore});
 }
 
 final class CharactersError extends CharactersState {

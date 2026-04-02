@@ -1,9 +1,10 @@
-import 'package:rick_and_morty/core/widgets/status_life.dart';
+import 'package:rick_and_morty/data/models/data_models/like_status.dart';
+import 'package:rick_and_morty/data/models/data_models/life_status.dart';
 import 'package:rick_and_morty/data/models/location/location.dart';
 import 'package:rick_and_morty/data/models/origin/origin.dart';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:rick_and_morty/domain/entity/character_data.dart';
+import 'package:rick_and_morty/data/models/data_models/character_data.dart';
 
 part 'character.g.dart';
 
@@ -41,20 +42,20 @@ class Character {
     return CharacterData(
       id: id,
       name: name,
-      status: StatusLife.fromString(status),
+      status: LifeStatus.fromString(status),
       species: species,
-      type: type,
+      // type: type,
       gender: gender,
       locationName: location.name,
-      locationUrl: location.url,
+      // locationUrl: location.url,
       originName: origin.name,
-      originUrl: origin.url,
+      // originUrl: origin.url,
       image: image,
-      episodes: episode,
-      url: url,
-      created: created,
-      cachedAt: DateTime.now().millisecondsSinceEpoch,
-      isLiked: false,
+      // episodes: episode,
+
+      // created: created,
+      // cachedAt: DateTime.now().millisecondsSinceEpoch,
+      likeStatus: LikeStatus.unLike,
     );
   }
 

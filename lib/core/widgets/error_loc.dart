@@ -10,13 +10,14 @@ class ErrorLoc extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error, color: Colors.red, size: 60),
+          const Icon(Icons.error_outline, color: Colors.red, size: 50),
           const SizedBox(height: 16),
           Text(
             message,
             style: const TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
+          SizedBox(height: 30),
         ],
       ),
     );

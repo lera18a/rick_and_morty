@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rick_and_morty/core/widgets/like_status.dart';
+import 'package:rick_and_morty/data/models/data_models/like_status.dart';
 
 class Like extends StatelessWidget {
   const Like({super.key, this.onPressedLike, required this.likeStatus});

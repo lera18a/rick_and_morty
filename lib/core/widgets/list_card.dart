@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rick_and_morty/core/widgets/like.dart';
-import 'package:rick_and_morty/core/widgets/like_status.dart';
-import 'package:rick_and_morty/core/widgets/status_life.dart';
+import 'package:rick_and_morty/data/models/data_models/like_status.dart';
+import 'package:rick_and_morty/data/models/data_models/life_status.dart';
 import 'package:rick_and_morty/core/widgets/status_of_character_widget.dart';
 
 class ListCard extends StatelessWidget {
@@ -19,7 +19,7 @@ class ListCard extends StatelessWidget {
   final String imageURL;
   final String species;
   final void Function()? onTap;
-  final StatusLife statusOfCharacter;
+  final LifeStatus statusOfCharacter;
   final LikeStatus likeStatus;
   final void Function()? onPressedLike;
 

@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rick_and_morty/core/enviroment_variables.dart';
-import 'package:rick_and_morty/data/api/rick_and_morty_api_repository_impl.dart';
+import 'package:rick_and_morty/data/remote/rick_and_morty_api.dart';
 
 void main() {
   final dio = Dio(BaseOptions(baseUrl: EnviromentVariables.host));
-  final apiClient = RickAndMortyApiRepositoryImpl(dio: dio);
+  final apiClient = RickAndMortyApi(dio: dio);
 
   group('Get characters group', () {
     test('Get characters result', () async {
