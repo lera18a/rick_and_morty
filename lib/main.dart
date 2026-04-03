@@ -6,3 +6,4 @@ void main() {
   configureDependencies();
   runApp(const RickAndMortyApp());
 }
+// 

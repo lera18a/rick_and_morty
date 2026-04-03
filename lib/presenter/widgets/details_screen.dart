@@ -5,8 +5,8 @@ import 'package:rick_and_morty/core/errors/error_type.dart';
 import 'package:rick_and_morty/core/widgets/details_card_widget.dart';
 import 'package:rick_and_morty/core/widgets/error_loc.dart';
 import 'package:rick_and_morty/core/widgets/loading_widget.dart';
-import 'package:rick_and_morty/data/repository_impl.dart';
-import 'package:rick_and_morty/presenter/cubit/character/character_cubit.dart';
+import 'package:rick_and_morty/domain/repository/repository.dart';
+import 'package:rick_and_morty/presenter/cubit/details_cubit/detail_cubit.dart';
 
 class DetailsScreen extends StatelessWidget {
   const DetailsScreen({super.key, required this.id});
@@ -18,14 +18,14 @@ class DetailsScreen extends StatelessWidget {
       appBar: AppBar(title: Text('DetailsScreen')),
       body: BlocProvider(
         create: (context) =>
-            CharacterCubit(characterRepository: getIt<RepositoryImpl>())
+            DetailCubit(characterRepository: getIt<Repository>())
               ..getCharacterDetail(id),
-        child: BlocBuilder<CharacterCubit, CharacterState>(
+        child: BlocBuilder<DetailCubit, DetailState>(
           builder: (BuildContext context, state) {
             return switch (state) {
-              CharacterInitial() => LoadingWidget(),
-              CharacterLoading() => LoadingWidget(),
-              CharacterLoaded(:final detailEntity) => DetailCardWidget(
+              DetailInitial() => LoadingWidget(),
+              DetailLoading() => LoadingWidget(),
+              DetailLoaded(:final detailEntity) => DetailCardWidget(
                 lastLocationPlace: detailEntity.lastLocationPlace,
                 firstLocationPlace: detailEntity.firstLocationPlace,
                 species: detailEntity.species,
@@ -35,13 +35,13 @@ class DetailsScreen extends StatelessWidget {
                 statusLife: detailEntity.statusLife,
                 likeStatus: detailEntity.likeStatus,
                 onPressedLike: () async {
-                  await context.read<CharacterCubit>().toggleLike(id);
+                  await context.read<DetailCubit>().toggleLike(
+                    id,
+                    detailEntity.likeStatus,
+                  );
                 },
               ),
-              CharacterError(
-                :final String message,
-                :final ErrorType errorType,
-              ) =>
+              DetailError(:final String message, :final ErrorType errorType) =>
                 ErrorLoc(message: message, errorType: errorType),
             };
           },

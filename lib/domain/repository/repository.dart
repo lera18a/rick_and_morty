@@ -1,18 +1,22 @@
-import 'package:rick_and_morty/data/remote/pagination/pagination_result.dart';
+import 'package:rick_and_morty/domain/models/pagination_result.dart';
+import 'package:rick_and_morty/domain/entity/detail_entity.dart';
+import 'package:rick_and_morty/domain/entity/list_entity.dart';
 
-abstract interface class Repository<T, K> {
+abstract interface class Repository {
+  Stream<int> get likeUpdates;
   //все - сетевой - c пагинацией
-  Future<PaginationResult<T>> getAll(int page);
+  Future<PaginationResult<ListEntity>> getAll(int page);
 
   // Future<void> cached(List<T> entities);
   // для отдельной страницы
   // сначала кэш потом апи
-  Future<T?> getByID(int entityID);
+  Future<DetailEntity?> getByID(int entityID);
 
   // страница с setting чтобы почистить кэш - navBar
   Future<void> clearCache();
   // лайкнутые -
-  Future<List<T>> getLiked();
+  Future<List<ListEntity>> getLiked();
   // для того чтобы лайкнуть и сохранить в кэш сразу в бдшку
-  Future<T> toggleLike(K entity);
+  Future<void> like(int id);
+  Future<void> disLike(int id);
 }

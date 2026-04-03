@@ -1,15 +1,19 @@
 import 'dart:async';
 
 import 'package:rick_and_morty/data/local/local_data_source.dart';
-import 'package:rick_and_morty/data/models/data_models/like_status.dart';
-import 'package:rick_and_morty/data/remote/pagination/pagination_result.dart';
-import 'package:rick_and_morty/data/remote/remote_pagination.dart';
-import 'package:rick_and_morty/data/models/data_models/character_data.dart';
+import 'package:rick_and_morty/data/mapper.dart';
+import 'package:rick_and_morty/domain/models/like_status.dart';
+import 'package:rick_and_morty/domain/models/pagination_result.dart';
+import 'package:rick_and_morty/data/remote/pagination/remote_pagination.dart';
+import 'package:rick_and_morty/domain/entity/detail_entity.dart';
+import 'package:rick_and_morty/domain/entity/list_entity.dart';
+import 'package:rick_and_morty/domain/repository/repository.dart';
 
-class RepositoryImpl {
+class RepositoryImpl implements Repository {
   final LocalDataSource _local;
   final RemotePagination _remote;
   final _likeUpdates = StreamController<int>.broadcast();
+  @override
   Stream<int> get likeUpdates => _likeUpdates.stream;
 
   // если есть сеть то ходим в api, если нет то в бдшку
@@ -28,21 +32,22 @@ class RepositoryImpl {
   //если есть лайкнутый то берем из бд
   //если нет то подгружаем
 
+  @override
   Future<void> clearCache() async {
     await _local.clearCachedAll();
   }
 
-  // сетевой- получили все
-  Future<PaginationResult<CharacterData>> getAll(int page) async {
-    final result = await _remote.getPage(page);
-    final likedIds = await _local.getLikedIds();
-    final itemsWithLikes = result.items.map((character) {
-      if (likedIds.contains(character.id)) {
-        return character.copyWith(likeStatus: LikeStatus.like);
-      }
-      return character;
-    }).toList();
+  Future<void> clearOneCached(int id) async {
+    await _local.clearOneOfCached(id);
+  }
 
+  // сетевой- получили все
+  @override
+  Future<PaginationResult<ListEntity>> getAll(int page) async {
+    final result = await _remote.getPage(page);
+    final itemsWithLikes = result.items
+        .map((listEntity) => listEntity)
+        .toList();
     return PaginationResult(
       items: itemsWithLikes,
       hasMore: result.hasMore,
@@ -51,48 +56,46 @@ class RepositoryImpl {
   }
 
   //
-  Future<CharacterData?> getByID(int entityID) async {
+  @override
+  Future<DetailEntity?> getByID(int entityID) async {
+    final remote = await _remote.getById(entityID);
     final local = await _local.getByID(entityID);
-    if (local != null) return local;
-    return await _remote.getById(entityID);
+    final likeStatus = local?.likeStatus ?? LikeStatus.unLike;
+    if (remote != null) {
+      return remote.copyWith(likeStatus: likeStatus);
+    } else {
+      if (local != null) return Mapper.toDetail(local);
+    }
+    return null;
   }
 
-  Future<List<CharacterData>> getLiked() async {
-    return await _local.getLiked();
+  @override
+  Future<List<ListEntity>> getLiked() async {
+    final characters = await _local.getLiked();
+    final listEntities = characters.map((e) => Mapper.toListEntity(e)).toList();
+    return listEntities;
   }
 
   //проверяем локально-> если нет то ходим в сеть-> если нет то ошибку
-  Future<LikeStatus> _like(int id) async {
-    var character = await _local.getByID(id);
-    if (character == null) {
-      //вызвала character по id
-      character = await _remote.getById(id);
-      if (character == null) {
-        throw Exception('Character with $id not found');
-      }
+  @override
+  Future<void> like(int id) async {
+    final detail = await getByID(id);
+    if (detail == null) {
+      throw Exception('Character with $id not found');
     }
-    final liked = character.copyWith(likeStatus: LikeStatus.like);
-    await _local.cachedOne(liked);
+    final likedDetail = detail.copyWith(likeStatus: LikeStatus.like);
+    final likedCharacter = Mapper.detailsToData(likedDetail);
+    await _local.cachedOne(likedCharacter);
     _likeUpdates.add(id);
-    return LikeStatus.like;
   }
 
-  Future<LikeStatus> _disLike(int id) async {
-    var character = await _local.getByID(id);
+  @override
+  Future<void> disLike(int id) async {
+    var character = await getByID(id);
     if (character == null) {
       throw Exception('Character with $id not found');
     }
     await _local.clearOneOfCached(id);
     _likeUpdates.add(id);
-    return LikeStatus.unLike;
-  }
-
-  Future<LikeStatus> toggleLike(int id) async {
-    final character = await _local.getByID(id);
-    if (character == null) {
-      return await _like(id);
-    } else {
-      return await _disLike(id);
-    }
   }
 }

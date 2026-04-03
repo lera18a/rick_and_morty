@@ -43,23 +43,18 @@ class ListScreen extends StatelessWidget {
                     name: listEntity.name,
                     imageURL: listEntity.imageURL,
                     onTap: () {
-                      final charactersCubit = context.read<CharactersCubit>();
-
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => BlocProvider.value(
-                            value: charactersCubit,
-                            child: DetailsScreen(id: listEntity.id),
-                          ),
+                          builder: (context) =>
+                              DetailsScreen(id: listEntity.id),
                         ),
                       );
                     },
                     statusOfCharacter: listEntity.statusOfCharacter,
-                    likeStatus: listEntity.likeStatus,
-                    onPressedLike: () {
-                      context.read<CharactersCubit>().toggleLike(listEntity.id);
-                    },
+                    // onPressedLike: () {
+                    //   context.read<CharactersCubit>().toggleLike(listEntity.id);
+                    // },
                   ),
                 ),
               ),

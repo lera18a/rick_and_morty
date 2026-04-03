@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rick_and_morty/core/widgets/info_widget.dart';
 import 'package:rick_and_morty/core/widgets/like.dart';
-import 'package:rick_and_morty/data/models/data_models/like_status.dart';
-import 'package:rick_and_morty/data/models/data_models/life_status.dart';
+import 'package:rick_and_morty/domain/models/like_status.dart';
+import 'package:rick_and_morty/domain/models/life_status.dart';
 import 'package:rick_and_morty/core/widgets/status_of_character_widget.dart';
 
 class DetailCardWidget<T> extends StatelessWidget {

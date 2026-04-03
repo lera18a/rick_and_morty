@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rick_and_morty/data/models/data_models/life_status.dart';
+import 'package:rick_and_morty/domain/models/life_status.dart';
 
 class StatusOfCharacterWidget extends StatelessWidget {
   const StatusOfCharacterWidget({

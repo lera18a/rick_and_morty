@@ -30,7 +30,7 @@ class _NavigationState extends State<Navigation> {
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home, size: 30), label: ''),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite, color: Colors.red, size: 30),
+            icon: Icon(Icons.favorite, size: 30),
             label: '',
           ),
           BottomNavigationBarItem(

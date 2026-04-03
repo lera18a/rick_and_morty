@@ -21,7 +21,7 @@ class Mapper {
   );
 
   // в модель -> ListEntity
-  static ListEntity toList(CharacterData characterData) => ListEntity(
+  static ListEntity toListEntity(CharacterData characterData) => ListEntity(
     name: characterData.name,
     imageURL: characterData.image,
     species: characterData.species,

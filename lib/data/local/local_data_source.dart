@@ -1,6 +1,6 @@
 import 'package:rick_and_morty/core/config/sqflite_database.dart';
 import 'package:rick_and_morty/data/models/data_models/character_data.dart';
-import 'package:rick_and_morty/data/models/data_models/like_status.dart';
+import 'package:rick_and_morty/domain/models/like_status.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class LocalDataSource {

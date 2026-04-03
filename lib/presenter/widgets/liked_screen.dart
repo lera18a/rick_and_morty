@@ -33,10 +33,9 @@ class LikedScreen extends StatelessWidget {
                   ),
                 ),
                 statusOfCharacter: listEntity.statusOfCharacter,
-                likeStatus: listEntity.likeStatus,
-                onPressedLike: () {
-                  context.read<LikedCubit>().toggleLike(listEntity.id);
-                },
+                // onPressedLike: () {
+                //   context.read<LikedCubit>().toggleLike(listEntity.id);
+                // },
               ),
             ),
           // ),

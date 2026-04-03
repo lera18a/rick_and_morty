@@ -1,8 +1,8 @@
 // можно потом сделать отдельно
 // location - model и origin - модель
 
-import 'package:rick_and_morty/data/models/data_models/like_status.dart';
-import 'package:rick_and_morty/data/models/data_models/life_status.dart';
+import 'package:rick_and_morty/domain/models/life_status.dart';
+import 'package:rick_and_morty/domain/models/like_status.dart';
 
 //
 class CharacterData {
