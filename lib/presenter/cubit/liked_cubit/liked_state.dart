@@ -15,6 +15,7 @@ final class LikedLoaded extends LikedState {
 
 final class LikedError extends LikedState {
   final String message;
+  final ErrorType errorType;
 
-  LikedError({required this.message});
+  LikedError({required this.message, required this.errorType});
 }

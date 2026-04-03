@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:rick_and_morty/core/errors/error_type.dart';
+import 'package:rick_and_morty/core/errors/handle_exception.dart';
 import 'package:rick_and_morty/data/mapper.dart';
 import 'package:rick_and_morty/data/models/data_models/character_data.dart';
 import 'package:rick_and_morty/data/repository_impl.dart';
@@ -48,20 +50,21 @@ class CharactersCubit extends Cubit<CharactersState> {
     try {
       _currentPage = 1;
       _characters.clear();
-      print('1. Начинаю загрузку'); // добавь
       final result = await _characterRepository.getAll(_currentPage);
 
-      print('2. Получил данные: ${result.items.length} шт'); // добавь
-      // final entities = result.items.map((data) => Mapper.toList(data)).toList();
-
-      // print('3. Замапил в entities: ${entities.length} шт'); // добавь
       _characters.addAll(result.items);
       _hasMore = result.hasMore;
       _emitLoaded();
     } catch (e) {
-      print('ОШИБКА: $e'); // добавь
-      emit(CharactersError(message: 'Ошибка: $e'));
+      final errorType = ErrorHandler.handleError(e);
+      emit(CharactersError(message: errorType.message, errorType: errorType));
     }
+  }
+
+  Future<void> cleanCache() async {
+    await _characterRepository.clearCache();
+    await loadInitCharacters();
+    await loadMoreCharacters();
   }
 
   Future<void> loadMoreCharacters() async {
@@ -72,9 +75,6 @@ class CharactersCubit extends Cubit<CharactersState> {
       _currentPage++;
 
       final characters = await _characterRepository.getAll(_currentPage);
-      // final entities = characters.items
-      //     .map((data) => Mapper.toList(data))
-      //     .toList();
 
       _characters.addAll(characters.items);
       _hasMore = characters.hasMore;
@@ -83,26 +83,16 @@ class CharactersCubit extends Cubit<CharactersState> {
     } catch (e) {
       _currentPage--;
       _hasMore = true;
-      emit(CharactersError(message: 'Ошибка: $e'));
+      final errorType = ErrorHandler.handleError(e);
+      emit(CharactersError(message: errorType.message, errorType: errorType));
     }
   }
 
   Future<void> toggleLike(int characterId) async {
-    final index = _characters.indexWhere((c) => c.id == characterId);
-    if (index == -1) return;
-
-    final character = _characters[index];
-
     try {
-      // Вызываем репозиторий — он вернёт новый статус
-      final newStatus = await _characterRepository.toggleLike(character);
-
-      // Обновляем локальный список
-      // _characters[index] = character.copyWith(likeStatus: newStatus);
-
-      _emitLoaded();
+      await _characterRepository.toggleLike(characterId);
     } catch (e) {
-      print('Ошибка лайка: $e');
+      Exception('Ошибка лайка: $e');
     }
   }
 

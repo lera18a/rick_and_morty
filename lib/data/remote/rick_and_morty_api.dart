@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:rick_and_morty/core/errors/handle_exception.dart';
 import 'package:rick_and_morty/data/models/character/character.dart';
 import 'package:rick_and_morty/data/models/full_character/full_character.dart';
 
@@ -14,8 +15,9 @@ class RickAndMortyApi {
         queryParameters: {'page': page},
       );
       return FullCharacter.fromJson(response.data);
-    } on DioException {
-      rethrow;
+    } catch (e) {
+      final errorType = ErrorHandler.handleError(e);
+      throw Exception(errorType);
     }
   }
 
@@ -23,8 +25,9 @@ class RickAndMortyApi {
     try {
       final Response response = await _dio.get('/character/$id');
       return Character.fromJson(response.data);
-    } on DioException {
-      rethrow;
+    } catch (e) {
+      final errorType = ErrorHandler.handleError(e);
+      throw Exception(errorType);
     }
   }
 }

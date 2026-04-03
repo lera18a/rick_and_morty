@@ -15,6 +15,7 @@ final class CharacterLoaded extends CharacterState {
 
 final class CharacterError extends CharacterState {
   final String message;
+  final ErrorType errorType;
 
-  CharacterError({required this.message});
+  CharacterError({required this.message, required this.errorType});
 }

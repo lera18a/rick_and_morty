@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rick_and_morty/core/di/injector.dart';
-import 'package:rick_and_morty/data/repository_impl.dart';
 import 'package:rick_and_morty/presenter/widgets/liked_screen.dart';
 import 'package:rick_and_morty/presenter/widgets/list_screen.dart';
 import 'package:rick_and_morty/presenter/widgets/settings_screen.dart';
@@ -20,11 +18,7 @@ class _NavigationState extends State<Navigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(_titles[_currentIndex])),
-      body: [
-        ListScreen(),
-        LikedScreen(),
-        SettingsScreen(repositoryImpl: getIt.call<RepositoryImpl>()),
-      ][_currentIndex],
+      body: [ListScreen(), LikedScreen(), SettingsScreen()][_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.blue[800],
         currentIndex: _currentIndex,

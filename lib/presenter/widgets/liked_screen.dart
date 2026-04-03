@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rick_and_morty/core/errors/error_type.dart';
 import 'package:rick_and_morty/core/widgets/error_loc.dart';
 import 'package:rick_and_morty/core/widgets/list_card.dart';
 import 'package:rick_and_morty/core/widgets/list_widget.dart';
 import 'package:rick_and_morty/core/widgets/loading_widget.dart';
 import 'package:rick_and_morty/domain/entity/list_entity.dart';
 import 'package:rick_and_morty/presenter/cubit/liked_cubit/liked_cubit.dart';
+import 'package:rick_and_morty/presenter/widgets/details_screen.dart';
 
 class LikedScreen extends StatelessWidget {
   const LikedScreen({super.key});
@@ -17,34 +19,19 @@ class LikedScreen extends StatelessWidget {
         return switch (state) {
           LikedInitial() => const LoadingWidget(),
           LikedLoading() => const LoadingWidget(),
-          LikedLoaded(
-            :final List<ListEntity> listEntities,
-            // :final bool hasMore,
-          ) =>
-            //   NotificationListener<ScrollNotification>(
-            //     onNotification: (scrollInfo) {
-            //       if (scrollInfo.metrics.pixels >=
-            //               scrollInfo.metrics.maxScrollExtent - 200 &&
-            //           hasMore) {
-            //         context.read<CharactersCubit>().loadMoreCharacters();
-            //       }
-            //       return false;
-            //     },
-            // child:
+          LikedLoaded(:final List<ListEntity> listEntities) =>
             ListWidget<ListEntity>(
               items: listEntities,
               itemBuilder: (listEntity) => ListCard(
                 species: listEntity.species,
                 name: listEntity.name,
                 imageURL: listEntity.imageURL,
-                onTap: () {},
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) =>
-                //         DetailsScreen(detailEntity: listEntity),
-                //   ),
-                // ),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailsScreen(id: listEntity.id),
+                  ),
+                ),
                 statusOfCharacter: listEntity.statusOfCharacter,
                 likeStatus: listEntity.likeStatus,
                 onPressedLike: () {
@@ -53,7 +40,8 @@ class LikedScreen extends StatelessWidget {
               ),
             ),
           // ),
-          LikedError() => ErrorLoc(message: state.message),
+          LikedError(:final String message, :final ErrorType errorType) =>
+            ErrorLoc(message: message, errorType: errorType),
         };
       },
     );

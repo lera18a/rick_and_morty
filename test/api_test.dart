@@ -9,11 +9,11 @@ void main() {
 
   group('Get characters group', () {
     test('Get characters result', () async {
-      final response = await apiClient.getAll();
+      final response = await apiClient.getAll(1);
       expect(response.results.isNotEmpty, true);
     });
     test('Get characters info', () async {
-      final response = await apiClient.getAll();
+      final response = await apiClient.getAll(1);
       expect(response.info.pages != 0, true);
     });
   });

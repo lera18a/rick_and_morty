@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rick_and_morty/core/di/injector.dart';
+import 'package:rick_and_morty/core/errors/error_type.dart';
 import 'package:rick_and_morty/core/widgets/details_card_widget.dart';
 import 'package:rick_and_morty/core/widgets/error_loc.dart';
 import 'package:rick_and_morty/core/widgets/loading_widget.dart';
 import 'package:rick_and_morty/data/repository_impl.dart';
-import 'package:rick_and_morty/domain/entity/detail_entity.dart';
 import 'package:rick_and_morty/presenter/cubit/character/character_cubit.dart';
 
 class DetailsScreen extends StatelessWidget {
-  const DetailsScreen({super.key, required this.detailEntity});
+  const DetailsScreen({super.key, required this.id});
 
-  final DetailEntity detailEntity;
+  final int id;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('DetailsScreen')),
       body: BlocProvider(
         create: (context) =>
-            CharacterCubit(characterRepository: getIt<RepositoryImpl>()),
-        // ..getCharacterDetail(detailEntity.id),
+            CharacterCubit(characterRepository: getIt<RepositoryImpl>())
+              ..getCharacterDetail(id),
         child: BlocBuilder<CharacterCubit, CharacterState>(
           builder: (BuildContext context, state) {
             return switch (state) {
@@ -34,8 +34,15 @@ class DetailsScreen extends StatelessWidget {
                 character: detailEntity,
                 statusLife: detailEntity.statusLife,
                 likeStatus: detailEntity.likeStatus,
+                onPressedLike: () async {
+                  await context.read<CharacterCubit>().toggleLike(id);
+                },
               ),
-              CharacterError() => ErrorLoc(message: state.message),
+              CharacterError(
+                :final String message,
+                :final ErrorType errorType,
+              ) =>
+                ErrorLoc(message: message, errorType: errorType),
             };
           },
         ),

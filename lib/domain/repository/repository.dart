@@ -16,15 +16,3 @@ abstract interface class Repository<T, K> {
   // для того чтобы лайкнуть и сохранить в кэш сразу в бдшку
   Future<T> toggleLike(K entity);
 }
-
-//toggleLike-> cached
-//три страницы
-//лайки
-//дом
-// сеттингс
-
-// Future<List<CharacterData>> getPage(int page);
-// Future<CharacterData?> getByID(int id);
-// Future<List<CharacterData>> getLiked({int page});
-// Future<void> toggleLike(CharacterData character);
-// Future<void> clearCache();

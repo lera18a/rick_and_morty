@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:rick_and_morty/core/errors/error_type.dart';
+import 'package:rick_and_morty/core/errors/handle_exception.dart';
 import 'package:rick_and_morty/data/mapper.dart';
-import 'package:rick_and_morty/data/models/data_models/character_data.dart';
 import 'package:rick_and_morty/data/repository_impl.dart';
 import 'package:rick_and_morty/domain/entity/detail_entity.dart';
 
@@ -11,17 +12,10 @@ part 'character_state.dart';
 
 class CharacterCubit extends Cubit<CharacterState> {
   final RepositoryImpl _characterRepository;
-  late final StreamSubscription<int> _likeSub;
-  CharacterData? _character;
+
   CharacterCubit({required RepositoryImpl characterRepository})
     : _characterRepository = characterRepository,
       super(CharacterInitial());
-
-  @override
-  Future<void> close() {
-    _likeSub.cancel();
-    return super.close();
-  }
 
   Future<void> getCharacterDetail(int id) async {
     emit(CharacterLoading());
@@ -30,19 +24,27 @@ class CharacterCubit extends Cubit<CharacterState> {
       if (character == null) return;
       final detail = Mapper.toDetail(character);
       emit(CharacterLoaded(detailEntity: detail));
-      _character = character;
-      emit(CharacterLoaded(detailEntity: Mapper.toDetail(character)));
     } catch (e) {
-      emit(CharacterError(message: 'Ошибка: $e'));
+      final errorType = ErrorHandler.handleError(e);
+      emit(CharacterError(message: errorType.message, errorType: errorType));
     }
   }
 
-  Future<void> toggleLike() async {
-    if (_character == null) return;
+  Future<void> toggleLike(int id) async {
+    final currentState = state;
+    if (currentState is! CharacterLoaded) return;
+
     try {
-      await _characterRepository.toggleLike(_character!);
+      final newStatus = await _characterRepository.toggleLike(id);
+
+      // Обновляем текущий state без запроса
+      final updatedDetail = currentState.detailEntity.copyWith(
+        likeStatus: newStatus,
+      );
+
+      emit(CharacterLoaded(detailEntity: updatedDetail));
     } catch (e) {
-      print('Ошибка лайка: $e');
+      Exception('Ошибка лайка: $e');
     }
   }
 }

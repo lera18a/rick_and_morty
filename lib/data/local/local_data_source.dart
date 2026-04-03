@@ -57,6 +57,11 @@ class LocalDataSource {
     await db.delete('character');
   }
 
+  Future<void> clearOneOfCached(int id) async {
+    final db = await database.openData();
+    await db.delete('character', where: 'id = ?', whereArgs: [id]);
+  }
+
   Future<LikeStatus> toggleLike(int entityID) async {
     final db = await database.openData();
 

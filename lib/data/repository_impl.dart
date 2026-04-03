@@ -16,7 +16,7 @@ class RepositoryImpl {
   // если нет интернета то отображаю что нет интернета
   // кнопка на обновление
   // сранвниваем по id - шнику
-  //
+
   RepositoryImpl({
     required LocalDataSource local,
     required RemotePagination remote,
@@ -28,49 +28,7 @@ class RepositoryImpl {
   //если есть лайкнутый то берем из бд
   //если нет то подгружаем
 
-  // Future<List<CharacterData>> getLikedWithDatabase() async {
-  //   final liked = await _local.getLiked();
-  //   if (liked.isNotEmpty) return;
-  // }
-
-  //выдает всех если
-  // Future<PaginationResult<CharacterData>> getCharacters(int page) async {
-  //   final cached = await _local.getAll();
-  //   if (cached.isNotEmpty) return cached;
-  //   try {
-  //     final response = await _remote.getAll();
-  //     final characters = response.results.map((e) => e.toDataModel()).toList();
-  //     await _local.cached(characters);
-  //     return characters;
-  //   } catch (e) {
-  //     print(e);
-  //     rethrow;
-  //   }
-  // }
-
-  // Future<CharacterData> getCharacterDetail(int id) async {
-  //   final cached = await _local.getByID(id);
-  //   if (cached != null) return cached;
-  //   try {
-  //     final response = await _remote.getFromId(id);
-  //     final character = response.toDataModel();
-  //     await _local.cached([character]);
-  //     return character;
-  //   } catch (e) {
-  //     print(e);
-  //     rethrow;
-  //   }
-  // }
-
-  // Future<List<CharacterData>> refresh() async {
-  //   final response = await _remote.getAll();
-  //   final characters = response.results.map((e) => e.toDataModel()).toList();
-  //   await _local.cached(characters);
-  //   return characters;
-  // }
-
   Future<void> clearCache() async {
-    //чистим локально кэш сохраняет в бд
     await _local.clearCachedAll();
   }
 
@@ -92,6 +50,7 @@ class RepositoryImpl {
     );
   }
 
+  //
   Future<CharacterData?> getByID(int entityID) async {
     final local = await _local.getByID(entityID);
     if (local != null) return local;
@@ -102,17 +61,38 @@ class RepositoryImpl {
     return await _local.getLiked();
   }
 
-  Future<LikeStatus> toggleLike(CharacterData entity) async {
-    final local = await _local.getByID(entity.id);
-    LikeStatus newStatus;
-    if (local == null) {
-      final liked = entity.copyWith(likeStatus: LikeStatus.like);
-      await _local.cachedOne(liked);
-      newStatus = LikeStatus.like;
-    } else {
-      newStatus = await _local.toggleLike(entity.id);
+  //проверяем локально-> если нет то ходим в сеть-> если нет то ошибку
+  Future<LikeStatus> _like(int id) async {
+    var character = await _local.getByID(id);
+    if (character == null) {
+      //вызвала character по id
+      character = await _remote.getById(id);
+      if (character == null) {
+        throw Exception('Character with $id not found');
+      }
     }
-    _likeUpdates.add(entity.id);
-    return newStatus;
+    final liked = character.copyWith(likeStatus: LikeStatus.like);
+    await _local.cachedOne(liked);
+    _likeUpdates.add(id);
+    return LikeStatus.like;
+  }
+
+  Future<LikeStatus> _disLike(int id) async {
+    var character = await _local.getByID(id);
+    if (character == null) {
+      throw Exception('Character with $id not found');
+    }
+    await _local.clearOneOfCached(id);
+    _likeUpdates.add(id);
+    return LikeStatus.unLike;
+  }
+
+  Future<LikeStatus> toggleLike(int id) async {
+    final character = await _local.getByID(id);
+    if (character == null) {
+      return await _like(id);
+    } else {
+      return await _disLike(id);
+    }
   }
 }
