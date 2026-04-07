@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:rick_and_morty/data/local/local_data_source.dart';
 import 'package:rick_and_morty/data/mapper.dart';
 import 'package:rick_and_morty/domain/models/like_status.dart';
@@ -58,14 +60,27 @@ class RepositoryImpl implements Repository {
   //
   @override
   Future<DetailEntity?> getByID(int entityID) async {
-    final remote = await _remote.getById(entityID);
-    final local = await _local.getByID(entityID);
-    final likeStatus = local?.likeStatus ?? LikeStatus.unLike;
-    if (remote != null) {
-      return remote.copyWith(likeStatus: likeStatus);
-    } else {
-      if (local != null) return Mapper.toDetail(local);
+    try {
+      final remote = await _remote.getById(entityID);
+      final local = await _local.getByID(entityID);
+      final likeStatus = local?.likeStatus ?? LikeStatus.unLike;
+      if (remote != null) {
+        await _local.cachedOne(Mapper.detailsToData(remote));
+        return remote.copyWith(likeStatus: likeStatus);
+      }
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionError ||
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        final local = await _local.getByID(entityID);
+
+        if (local != null) return Mapper.toDetail(local);
+        throw Exception('Нет интернета и кэша');
+      }
+      rethrow;
     }
+    final local = await _local.getByID(entityID);
+    if (local != null) return Mapper.toDetail(local);
     return null;
   }
 
